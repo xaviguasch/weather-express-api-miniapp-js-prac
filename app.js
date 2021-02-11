@@ -1,10 +1,22 @@
 const express = require('express')
-// const bodyParser = require('body-parser')
+const https = require('https')
+
 const app = express()
 
-app.use(bodyParser.urlencoded({ extended: true }))
-
 app.get('/', function (req, res) {
+  const url =
+    'https://api.openweathermap.org/data/2.5/weather?q=London&appid={API-KEY}&units=metric'
+
+  // REMOVE THE API KEY BEFORE SAVING!!!!!!!!!
+
+  https.get(url, function (response) {
+    response.on('data', function (data) {
+      const weatherData = JSON.parse(data)
+      const temp = weatherData.main.temp
+      const weatherDescription = weatherData.weather[0].description
+      console.log(weatherDescription)
+    })
+  })
   res.sendFile(__dirname + '/index.html')
 })
 
