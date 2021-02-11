@@ -1,11 +1,20 @@
 const express = require('express')
 const https = require('https')
+const bodyParser = require('body-parser')
 
 const app = express()
 
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.get('/', function (req, res) {
-  const url =
-    'https://api.openweathermap.org/data/2.5/weather?q=London&appid={API-KEY}&units=metric'
+  res.sendFile(__dirname + '/index.html')
+})
+
+app.post('/', function (req, res) {
+  const query = req.body.cityName
+  const apiKey = 'INSERT OPENWEATHER API KEY HERE!!!!!!!' // IT NEEDS THE API KEY
+  const units = 'metric'
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}&units=${units}`
 
   // REMOVE THE API KEY BEFORE SAVING!!!!!!!!!
 
@@ -18,15 +27,11 @@ app.get('/', function (req, res) {
       const imageURL = `http://openweathermap.org/img/wn/${icon}.png`
 
       res.write(`<p>The weather is currenty ${weatherDescription}</p>`)
-      res.write(`<h1>The temperature in London is ${temp} degrees Celcius.</h1>`)
+      res.write(`<h1>The temperature in ${query} is ${temp} degrees Celcius.</h1>`)
       res.write(`<img src="${imageURL}" alt="">`)
       res.send()
     })
   })
-})
-
-app.post('/', function (req, res) {
-  res.send(`lalallaa`)
 })
 
 app.listen(3000, function () {
